@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        return new ApiResponse(201, { ...user, token }, 'User registered successfully').send(res);
+        return new ApiResponse(201, {user : { _id: user._id, username: user.username, email: user.email, createdAt: user.createdAt}, token }, 'User registered successfully').send(res);
     } catch (error) {
         return new ApiError(500, error.message).error(res);
     }
@@ -50,19 +50,17 @@ router.post('/login', async (req, res) => {
 
         const { email, password } = req.body;
 
-
         // Find user in database (adjust based on your DB)
         const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: 'User not Found' });
+        if (!user) return new ApiError(404, 'User not found').error(res);
 
         // Verify password
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) return res.status(401).json({ message: 'Invalid credentials' });
-
+        if (!isPasswordValid) return new ApiError(401, 'Invalid credentials').error(res);
         // Generate JWT token
         const token = jwt.sign({ id: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        return new ApiResponse(200, { _id: user._id, username: user.username, email: user.email, createdAt: user.createdAt, token }, 'Login successful').send(res);
+        return new ApiResponse(200, {user : { _id: user._id, username: user.username, email: user.email, createdAt: user.createdAt}, token }, 'Login successful').send(res);
     } catch (error) {
         return new ApiError(500, error.message).error(res);
     }

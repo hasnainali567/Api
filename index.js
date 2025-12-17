@@ -23,7 +23,6 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use('/api/users', userRouter);
-app.use(authMiddleware);
 app.use('/api/students', studentRoutes);
 app.use(errorMiddleware)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))

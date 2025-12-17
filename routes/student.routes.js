@@ -1,8 +1,11 @@
 import express from 'express';
 import { createStudent, getAllStudents, getStudentById, updateStudentById, deleteStudentById } from '../controllers/student.controller.js';
 import upload from '../middleware/multer.middleware.js';
+import authMiddleware from '../middleware/auth.middleware.js';
 
 const router = express.Router();
+
+router.use(authMiddleware)
 
 // Create a new user
 router.post('/', upload.single('profilePic'), createStudent);
