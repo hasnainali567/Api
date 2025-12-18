@@ -17,9 +17,13 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  isVerified : {
+    type: Boolean,
+    default : false
   }
 }, { timestamps: true });
 
-const User = mongoose.model('Student', userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;
